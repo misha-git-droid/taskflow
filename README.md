@@ -1,4 +1,4 @@
-\# TaskFlow
+# TaskFlow
 
 
 
@@ -6,23 +6,23 @@ REST API для управления проектами и задачами.
 
 
 
-\## Стек технологий
+## Стек технологий
 
 
 
-\- Java 21
+- Java 21
 
-\- Spring Boot 3.x
+- Spring Boot 3.x
 
-\- PostgreSQL
+- PostgreSQL
 
-\- Maven
+- Maven
 
-\- Docker
+- Docker
 
 
 
-\## Статус
+## Статус
 
 
 
