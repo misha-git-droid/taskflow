@@ -9,7 +9,7 @@ import java.time.Instant;
 @RestController
 public class HelloController {
     @GetMapping("/api/v1/hello")
-    public HelloResponse hello(@RequestParam(value = "name", defaultValue = "World") String value) {
-        return new HelloResponse("Hello, " + value, Instant.now());
+    public HelloResponse hello(@RequestParam(name = "name", defaultValue = "World") String userName) {
+        return new HelloResponse("Hello, " + userName + "!", Instant.now());
     }
 }
