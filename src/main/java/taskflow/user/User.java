@@ -2,7 +2,6 @@ package taskflow.user;
 
 import jakarta.persistence.*;
 
-import java.math.BigInteger;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -15,15 +14,7 @@ public class User {
         this.username = username;
         this.passwordHash = passwordHash;
     }
-    public User(Long id, String email, String username,
-                String passwordHash, Instant createdAt, Instant updatedAt) {
-        this.id = id;
-        this.email = email;
-        this.username = username;
-        this.passwordHash = passwordHash;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,9 +27,6 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
     public void setEmail(String email) {
         this.email = email;
     }
@@ -76,9 +64,9 @@ public class User {
     }
 
     @Override
-    public boolean equals(Object object) {
-        if (object == null || getClass() != object.getClass()) return false;
-        User user = (User) object;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof User user)) return false;
         return Objects.equals(email, user.email);
     }
 

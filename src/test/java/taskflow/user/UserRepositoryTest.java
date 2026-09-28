@@ -4,17 +4,19 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.assertj.*;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Transactional
 class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
     @Test
     void shouldSaveAndFindUserByEmail() {
@@ -45,5 +47,32 @@ class UserRepositoryTest {
         userRepository.save(user);
         assertThat(user.getCreatedAt()).isNotNull();
         assertThat(user.getUpdatedAt()).isNotNull();
+    }
+
+    @Test
+    void shouldCreateUserAndReturnUserResponse() {
+        CreateUserRequest request = new CreateUserRequest("test1@example.com", "testuser", "hashedPassword123");
+        UserResponse response = userService.create(request);
+
+        assertThat(userRepository.existsByEmail("test1@example.com")).isTrue();
+        assertThat(request.username()).isEqualTo(response.username());
+    }
+
+    @Test
+    void shouldThrowExceptionIfDuplicateEmail() {
+        CreateUserRequest request = new CreateUserRequest("test1@example.com", "testuser", "hashedPassword123");
+        CreateUserRequest dup = new CreateUserRequest("test1@example.com", "testuserNew", "hashedPassword123");
+        userService.create(request);
+
+        assertThrows(RuntimeException.class, () -> userService.create(dup), "Email already exists");
+    }
+
+    @Test
+    void shouldThrowExceptionIfDuplicateUsername() {
+        CreateUserRequest request = new CreateUserRequest("test1@example.com", "testuser", "hashedPassword123");
+        CreateUserRequest dup = new CreateUserRequest("testNew@example.com", "testuser", "hashedPassword123");
+        userService.create(request);
+
+        assertThrows(RuntimeException.class, () -> userService.create(dup), "Username taken");
     }
 }
