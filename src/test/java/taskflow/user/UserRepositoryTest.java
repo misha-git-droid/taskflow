@@ -20,7 +20,7 @@ class UserRepositoryTest {
 
     @Test
     void shouldSaveAndFindUserByEmail() {
-        User user = new User("test@example.com", "testuser", "hashedPassword123");
+        User user = new User("test@example.com", "testuser", "password123");
 
         User saved = userRepository.save(user);
         Optional<User> found = userRepository.findByEmail("test@example.com");
@@ -43,7 +43,7 @@ class UserRepositoryTest {
 
     @Test
     void createAtAndUpdatedAtNotNull() {
-        User user = new User("test@example.com", "testuser", "hashedPassword123");
+        User user = new User("test@example.com", "testuser", "password123");
         userRepository.save(user);
         assertThat(user.getCreatedAt()).isNotNull();
         assertThat(user.getUpdatedAt()).isNotNull();
@@ -51,7 +51,7 @@ class UserRepositoryTest {
 
     @Test
     void shouldCreateUserAndReturnUserResponse() {
-        CreateUserRequest request = new CreateUserRequest("test1@example.com", "testuser", "hashedPassword123");
+        CreateUserRequest request = new CreateUserRequest("test1@example.com", "testuser", "password123");
         UserResponse response = userService.create(request);
 
         assertThat(userRepository.existsByEmail("test1@example.com")).isTrue();
@@ -60,19 +60,21 @@ class UserRepositoryTest {
 
     @Test
     void shouldThrowExceptionIfDuplicateEmail() {
-        CreateUserRequest request = new CreateUserRequest("test1@example.com", "testuser", "hashedPassword123");
-        CreateUserRequest dup = new CreateUserRequest("test1@example.com", "testuserNew", "hashedPassword123");
+        CreateUserRequest request = new CreateUserRequest("test1@example.com", "testuser", "password123");
+        CreateUserRequest dup = new CreateUserRequest("test1@example.com", "testuserNew", "password123");
         userService.create(request);
 
-        assertThrows(RuntimeException.class, () -> userService.create(dup), "Email already exists");
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> userService.create(dup));
+        assertThat(ex.getMessage()).isEqualTo("Email already exists");
     }
 
     @Test
     void shouldThrowExceptionIfDuplicateUsername() {
-        CreateUserRequest request = new CreateUserRequest("test1@example.com", "testuser", "hashedPassword123");
-        CreateUserRequest dup = new CreateUserRequest("testNew@example.com", "testuser", "hashedPassword123");
+        CreateUserRequest request = new CreateUserRequest("test1@example.com", "testuser", "password123");
+        CreateUserRequest dup = new CreateUserRequest("testNew@example.com", "testuser", "password123");
         userService.create(request);
 
-        assertThrows(RuntimeException.class, () -> userService.create(dup), "Username taken");
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> userService.create(dup));
+        assertThat(ex.getMessage()).isEqualTo("Username taken");
     }
 }

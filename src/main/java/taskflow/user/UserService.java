@@ -28,14 +28,10 @@ public class UserService {
         return new UserResponse(user.getId(), user.getEmail(), user.getUsername(), user.getCreatedAt());
     }
 
-    private UserResponse findById(Long id) {
-        User user;
-        Optional<User> op = userRepository.findById(id);
-        try {
-            user = op.orElseThrow();
-        } catch (NoSuchElementException exception) {
-            throw new RuntimeException("User not found with ud: " + id);
-        }
+    public UserResponse findById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+
         Long userId = user.getId();
         String email = user.getEmail();
         String username = user.getUsername();
