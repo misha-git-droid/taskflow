@@ -4,6 +4,9 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import taskflow.exception.EmailAlreadyExistsException;
+import taskflow.exception.UserNotFoundException;
+import taskflow.exception.UsernameAlreadyExistsException;
 
 import java.util.Optional;
 
@@ -17,6 +20,8 @@ class UserRepositoryTest {
     private UserRepository userRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserController userController;
 
     @Test
     void shouldSaveAndFindUserByEmail() {
@@ -39,6 +44,7 @@ class UserRepositoryTest {
     void shouldDetectExistingEmail() {
        userRepository.save(new User("dup@example.com", "user1", "hash"));
        assertThat(userRepository.existsByEmail("dup@example.com")).isTrue();
+
     }
 
     @Test
@@ -64,7 +70,7 @@ class UserRepositoryTest {
         CreateUserRequest dup = new CreateUserRequest("test1@example.com", "testuserNew", "password123");
         userService.create(request);
 
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> userService.create(dup));
+        EmailAlreadyExistsException ex = assertThrows(EmailAlreadyExistsException.class, () -> userService.create(dup));
         assertThat(ex.getMessage()).isEqualTo("Email already exists");
     }
 
@@ -74,7 +80,21 @@ class UserRepositoryTest {
         CreateUserRequest dup = new CreateUserRequest("testNew@example.com", "testuser", "password123");
         userService.create(request);
 
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> userService.create(dup));
+        UsernameAlreadyExistsException ex = assertThrows(UsernameAlreadyExistsException.class, () -> userService.create(dup));
         assertThat(ex.getMessage()).isEqualTo("Username taken");
+    }
+
+    @Test
+    void findByIdShouldReturnUserResponseIfUserExists() {
+        UserResponse expectedResponse = userService.create(new CreateUserRequest("test1@example.com", "testuser", "password123"));
+        UserResponse receivedResponse = userService.findById(expectedResponse.id());
+
+        assertThat(expectedResponse.email()).isEqualTo(receivedResponse.email());
+    }
+
+    @Test
+    void findByIdShouldThrowUserNotFoundExceptionIfUserNotExists() {
+        UserNotFoundException ex = assertThrows(UserNotFoundException.class, () -> userService.findById(123L));
+        assertThat(ex.getMessage()).isEqualTo("User not found!");
     }
 }
