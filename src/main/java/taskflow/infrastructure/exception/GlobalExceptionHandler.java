@@ -1,15 +1,13 @@
-package taskflow.infrastructure;
+package taskflow.infrastructure.exception;
 
-import jakarta.validation.constraints.Email;
-import org.springframework.boot.micrometer.observation.autoconfigure.ObservationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import taskflow.exception.EmailAlreadyExistsException;
-import taskflow.exception.UserNotFoundException;
-import taskflow.exception.UsernameAlreadyExistsException;
+import taskflow.infrastructure.web.ErrorResponse;
+
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -35,6 +33,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleArgumentNotValid(MethodArgumentNotValidException ex) {
-        return new ErrorResponse(ex.getMessage());
+        String message = ex.getBindingResult().getFieldErrors().stream()
+                .map(err -> err.getField() + ": " + err.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+        return new ErrorResponse(message);
     }
 }

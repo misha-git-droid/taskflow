@@ -1,4 +1,4 @@
-package taskflow.infrastructure;
+package taskflow.infrastructure.web;
 
 public record ErrorResponse(String error) {
 }

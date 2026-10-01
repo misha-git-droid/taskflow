@@ -1,4 +1,4 @@
-package taskflow.exception;
+package taskflow.infrastructure.exception;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException(String message) {

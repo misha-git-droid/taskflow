@@ -20,9 +20,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public UserResponse findById(@PathVariable("id") Long id) {
+    public UserResponse findById(@PathVariable Long id) {
         return userService.findById(id);
     }
-
 }

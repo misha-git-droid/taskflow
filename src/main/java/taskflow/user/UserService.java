@@ -1,13 +1,9 @@
 package taskflow.user;
 
 import org.springframework.stereotype.Service;
-import taskflow.exception.EmailAlreadyExistsException;
-import taskflow.exception.UserNotFoundException;
-import taskflow.exception.UsernameAlreadyExistsException;
-
-import java.time.Instant;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import taskflow.infrastructure.exception.EmailAlreadyExistsException;
+import taskflow.infrastructure.exception.UserNotFoundException;
+import taskflow.infrastructure.exception.UsernameAlreadyExistsException;
 
 @Service
 public class UserService {
@@ -33,12 +29,7 @@ public class UserService {
 
     public UserResponse findById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found!"));
-
-        Long userId = user.getId();
-        String email = user.getEmail();
-        String username = user.getUsername();
-        Instant createdAt = user.getCreatedAt();
-        return new UserResponse(userId, email, username, createdAt);
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+        return new UserResponse(user.getId(), user.getEmail(), user.getUsername(), user.getCreatedAt());
     }
 }
