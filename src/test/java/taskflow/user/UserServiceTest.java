@@ -3,6 +3,7 @@ package taskflow.user;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import taskflow.infrastructure.exception.EmailAlreadyExistsException;
 import taskflow.infrastructure.exception.UserNotFoundException;
@@ -18,6 +19,8 @@ public class UserServiceTest {
     private UserRepository userRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Test
     void shouldCreateUserAndReturnUserResponse() {
@@ -60,5 +63,15 @@ public class UserServiceTest {
     void findByIdShouldThrowUserNotFoundExceptionIfUserNotExists() {
         UserNotFoundException ex = assertThrows(UserNotFoundException.class, () -> userService.findById(123L));
         assertThat(ex.getMessage()).isEqualTo("User not found with id: " + 123L);
+    }
+
+    @Test
+    void shouldSaveInStoreHashNotText() {
+        userService.create(new CreateUserRequest("email@test.ru", "test", "password123"));
+        User user = userRepository.findByEmail("email@test.ru").orElseThrow();
+
+        assertThat(user.getPasswordHash()).isNotEqualTo("password123");
+        assertThat(user.getPasswordHash()).startsWith("$2a$");
+        assertThat(passwordEncoder.matches("password123", user.getPasswordHash())).isTrue();
     }
 }
