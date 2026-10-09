@@ -21,7 +21,7 @@ public class UserPrincipal implements UserDetails {
     }
 
     @Override
-    public @Nullable String getPassword() {
+    public String getPassword() {
         return user.getPasswordHash();
     }
 
