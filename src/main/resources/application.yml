@@ -1,7 +1,7 @@
 application:
   security:
     jwt:
-      secret-key: ${JWT_SECRET:fe869b5ddcf5abd31d52d05da5aebc0ef8e6daf8f2a0bd8186b78e9bea0bda26}
+      secret-key: ${JWT_SECRET:8ka3fN/o85ozi3A6kmGw56C+O16Safn0t8UsqI4CefU}
       expiration: 86400000  # 24 часа в миллисекундах
 
 spring:
