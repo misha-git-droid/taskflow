@@ -28,7 +28,7 @@ public class JwtServiceTest {
 
     @Test
     void shouldGenerateAndExtractUsername() {
-        ReflectionTestUtils.setField(jwtService, "secretKey", "11842a2bb92de9224888eba38e8c901edfbc7b49a807c4b4f2c4ed7e8e6230104911d811f11ba79583e060b9fdbbc9585dc464024ff4a3c3d621699ee8ff2fee");
+        ReflectionTestUtils.setField(jwtService, "secretKey", "DPzK/pSLQZ2fM5GlC42p6IOYo/8TJ6aMNQblLzbhZaE=");
         ReflectionTestUtils.setField(jwtService, "expirationMs", 86400000);
 
         String token = jwtService.generateToken(userDetails);
@@ -38,7 +38,7 @@ public class JwtServiceTest {
 
     @Test
     void shouldValidateToken() {
-        ReflectionTestUtils.setField(jwtService, "secretKey", "11842a2bb92de9224888eba38e8c901edfbc7b49a807c4b4f2c4ed7e8e6230104911d811f11ba79583e060b9fdbbc9585dc464024ff4a3c3d621699ee8ff2fee");
+        ReflectionTestUtils.setField(jwtService, "secretKey", "DPzK/pSLQZ2fM5GlC42p6IOYo/8TJ6aMNQblLzbhZaE=");
         ReflectionTestUtils.setField(jwtService, "expirationMs", 86400000);
         String token = jwtService.generateToken(userDetails);
 
@@ -47,7 +47,7 @@ public class JwtServiceTest {
 
     @Test
     void shouldInvalidateTokenForDifferentUser() {
-        ReflectionTestUtils.setField(jwtService, "secretKey", "11842a2bb92de9224888eba38e8c901edfbc7b49a807c4b4f2c4ed7e8e6230104911d811f11ba79583e060b9fdbbc9585dc464024ff4a3c3d621699ee8ff2fee");
+        ReflectionTestUtils.setField(jwtService, "secretKey", "DPzK/pSLQZ2fM5GlC42p6IOYo/8TJ6aMNQblLzbhZaE=");
         ReflectionTestUtils.setField(jwtService, "expirationMs", 86400000);
         String token = jwtService.generateToken(userDetails);
 
@@ -60,8 +60,8 @@ public class JwtServiceTest {
     }
 
     @Test
-    void shouldThrowOnExpiredToken() {
-        ReflectionTestUtils.setField(jwtService, "secretKey", "11842a2bb92de9224888eba38e8c901edfbc7b49a807c4b4f2c4ed7e8e6230104911d811f11ba79583e060b9fdbbc9585dc464024ff4a3c3d621699ee8ff2fee");
+    void shouldReturnFalseOnExpiredToken() {
+        ReflectionTestUtils.setField(jwtService, "secretKey", "DPzK/pSLQZ2fM5GlC42p6IOYo/8TJ6aMNQblLzbhZaE=");
         ReflectionTestUtils.setField(jwtService, "expirationMs", 100);
 
         String token = jwtService.generateToken(userDetails);
