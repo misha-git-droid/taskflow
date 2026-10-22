@@ -1,6 +1,7 @@
 package taskflow.infrastructure.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -31,8 +32,11 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        if (!(extractExpiration(token).getTime() >=  new Date(System.currentTimeMillis()).getTime())) return false;
-        return userDetails.getUsername().equals(extractAllClaims(token).getSubject());
+        try {
+            return userDetails.getUsername().equals(extractAllClaims(token).getSubject());
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
     }
 
     private SecretKey getSigningKey() {
