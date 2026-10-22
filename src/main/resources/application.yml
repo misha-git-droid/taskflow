@@ -1,3 +1,9 @@
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET:8ka3fN/o85ozi3A6kmGw56C+O16Safn0t8UsqI4CefU}
+      expiration: 86400000  # 24 часа в миллисекундах
+
 spring:
   application:
     name: taskflow
@@ -21,8 +27,8 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: false
 
-logging:
-  level:
-    org.hibernate.SQL: debug
-    org.flywaydb: debug
-    org.springframework.boot.autoconfigure.flyway: debug
+  logging:
+    level:
+      org.hibernate.SQL: debug
+      org.flywaydb: debug
+      org.springframework.boot.autoconfigure.flyway: debug
