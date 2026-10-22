@@ -18,19 +18,17 @@ public class JwtServiceTest {
 
     @BeforeEach
     void setUp() {
+        jwtService = new JwtService();
+        ReflectionTestUtils.setField(jwtService, "secretKey", "DPzK/pSLQZ2fM5GlC42p6IOYo/8TJ6aMNQblLzbhZaE=");
+        ReflectionTestUtils.setField(jwtService, "expirationMs", 86400000);
         userDetails = User.withUsername("test@test.ru")
                 .password("password")
                 .authorities(List.of())
                 .build();
-
-        jwtService = new JwtService();
     }
 
     @Test
     void shouldGenerateAndExtractUsername() {
-        ReflectionTestUtils.setField(jwtService, "secretKey", "DPzK/pSLQZ2fM5GlC42p6IOYo/8TJ6aMNQblLzbhZaE=");
-        ReflectionTestUtils.setField(jwtService, "expirationMs", 86400000);
-
         String token = jwtService.generateToken(userDetails);
 
         assertThat(jwtService.extractUsername(token)).isEqualTo("test@test.ru");
@@ -38,8 +36,6 @@ public class JwtServiceTest {
 
     @Test
     void shouldValidateToken() {
-        ReflectionTestUtils.setField(jwtService, "secretKey", "DPzK/pSLQZ2fM5GlC42p6IOYo/8TJ6aMNQblLzbhZaE=");
-        ReflectionTestUtils.setField(jwtService, "expirationMs", 86400000);
         String token = jwtService.generateToken(userDetails);
 
         assertThat(jwtService.isTokenValid(token, userDetails)).isTrue();
@@ -47,8 +43,6 @@ public class JwtServiceTest {
 
     @Test
     void shouldInvalidateTokenForDifferentUser() {
-        ReflectionTestUtils.setField(jwtService, "secretKey", "DPzK/pSLQZ2fM5GlC42p6IOYo/8TJ6aMNQblLzbhZaE=");
-        ReflectionTestUtils.setField(jwtService, "expirationMs", 86400000);
         String token = jwtService.generateToken(userDetails);
 
         userDetails = User.withUsername("test2@test.ru")
@@ -61,7 +55,6 @@ public class JwtServiceTest {
 
     @Test
     void shouldReturnFalseOnExpiredToken() {
-        ReflectionTestUtils.setField(jwtService, "secretKey", "DPzK/pSLQZ2fM5GlC42p6IOYo/8TJ6aMNQblLzbhZaE=");
         ReflectionTestUtils.setField(jwtService, "expirationMs", 100);
 
         String token = jwtService.generateToken(userDetails);
