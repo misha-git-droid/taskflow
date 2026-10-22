@@ -1,6 +1,5 @@
 package taskflow.security;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.User;
@@ -8,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.util.ReflectionTestUtils;
 import taskflow.infrastructure.security.JwtService;
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
@@ -59,6 +57,6 @@ public class JwtServiceTest {
 
         String token = jwtService.generateToken(userDetails);
 
-        assertThrows(ExpiredJwtException.class, () -> jwtService.isTokenValid(token, userDetails));
+        assertThat(jwtService.isTokenValid(token, userDetails)).isFalse();
     }
 }
