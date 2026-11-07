@@ -39,4 +39,10 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining(", "));
         return new ErrorResponse(message);
     }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse handleBadCredentials(BadCredentialsException ex) {
+        return new ErrorResponse("Invalid email/password!");
+    }
 }
