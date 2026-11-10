@@ -26,6 +26,9 @@ public class User {
     private Instant createdAt;
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.USER;
 
     public void setEmail(String email) {
         this.email = email;
@@ -54,6 +57,9 @@ public class User {
     }
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+    public Role getRole() {
+        return role;
     }
 
     @Override
