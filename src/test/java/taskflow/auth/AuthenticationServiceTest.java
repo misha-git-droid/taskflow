@@ -57,12 +57,9 @@ public class AuthenticationServiceTest {
         CreateUserRequest userRequest = new CreateUserRequest("test@test.ru", "test123", "password123");
         userService.create(userRequest);
 
-        LoginRequest request = new LoginRequest("test@test.ru", "password123");
-        authenticationService.login(request);
-
         UserDetails userDetails = userDetailsService.loadUserByUsername("test@test.ru");
-        Optional<? extends GrantedAuthority> opt = userDetails.getAuthorities().stream().findFirst();
-        GrantedAuthority role= opt.get();
-        assertThat(role.getAuthority()).isEqualTo("ROLE_USER");
+        assertThat(userDetails.getAuthorities())
+                .extracting(GrantedAuthority::getAuthority)
+                .containsExactly("ROLE_USER");
     }
 }
