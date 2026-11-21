@@ -1,10 +1,17 @@
 package taskflow.user;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import taskflow.infrastructure.exception.EmailAlreadyExistsException;
 import taskflow.infrastructure.exception.UserNotFoundException;
 import taskflow.infrastructure.exception.UsernameAlreadyExistsException;
+
+import java.nio.file.AccessDeniedException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -36,5 +43,9 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
         return new UserResponse(user.getId(), user.getEmail(), user.getUsername(), user.getCreatedAt());
+    }
+
+    public void delete(Long id) {
+        userRepository.deleteById(id);
     }
 }
