@@ -56,6 +56,16 @@ public class UserControllerTest {
     }
 
     @Test
+    void findById_returnStatus404ifRoleAdminAndUserNotExists() throws Exception {
+        String encodePassword = passwordEncoder.encode("password123");
+        userRepository.save(new User("test@test.ru", "test", encodePassword, Role.ADMIN));
+        Long alienId = 9999L;
+        LoginResponse loginResponse = authenticationService.login(new LoginRequest("test@test.ru", "password123"));
+
+        mockMvc.perform(get("/api/v1/users/{id}", alienId).header("Authorization", "Bearer " + loginResponse.token())).andExpect(status().isNotFound());
+    }
+
+    @Test
     void findById_returnStatus200IfRoleAdminAndIdAlien() throws Exception {
         String encodePassword = passwordEncoder.encode("password123");
         userRepository.save(new User("test@test.ru", "test", encodePassword, Role.ADMIN));
@@ -86,8 +96,19 @@ public class UserControllerTest {
         String encodePasswordOtherUser = passwordEncoder.encode("password123");
         User otherUser = userRepository.save(new User("testOtherUser@test.ru", "otherUser", encodePasswordOtherUser));
         Long idOtherUser = otherUser.getId();
+        LoginResponse loginResponse = authenticationService.login(new LoginRequest("test@test.ru", "password123"));
+
+        mockMvc.perform(delete("/api/v1/users/{id}", idOtherUser).header("Authorization", "Bearer " + loginResponse.token())).andExpect(status().isForbidden());
+    }
+
+    @Test
+    void delete_returnStatus401IfNoToken() throws Exception {
+        String encodePassword = passwordEncoder.encode("password123");
+        userRepository.save(new User("test@test.ru", "test", encodePassword, Role.ADMIN));
+        String encodePasswordOtherUser = passwordEncoder.encode("password123");
+        User otherUser = userRepository.save(new User("testOtherUser@test.ru", "otherUser", encodePasswordOtherUser));
+        Long idOtherUser = otherUser.getId();
 
         mockMvc.perform(delete("/api/v1/users/{id}", idOtherUser)).andExpect(status().isForbidden());
-
     }
 }
