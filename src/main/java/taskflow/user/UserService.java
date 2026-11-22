@@ -37,4 +37,8 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
         return new UserResponse(user.getId(), user.getEmail(), user.getUsername(), user.getCreatedAt());
     }
+
+    public void delete(Long id) {
+        userRepository.deleteById(id);
+    }
 }

@@ -15,6 +15,13 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
+    public User(String email, String username, String passwordHash, Role role) {
+        this.email = email;
+        this.username = username;
+        this.passwordHash = passwordHash;
+        this.role = role;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
