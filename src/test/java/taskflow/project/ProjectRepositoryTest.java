@@ -31,6 +31,6 @@ public class ProjectRepositoryTest {
         Project project = projectRepository.save(new Project("Project", "Description", user));
         Long userId = user.getId();
 
-        assertThat(projectRepository.findAllByOwnerId(userId).stream().anyMatch(projectName -> projectName.getName().equals(project.getName())));
+        assertThat(projectRepository.findAllByOwnerId(userId).stream().anyMatch(projectName -> projectName.getName().equals(project.getName()))).isTrue();
     }
 }
