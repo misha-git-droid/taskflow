@@ -32,9 +32,12 @@ public class Project {
     public void setName(String name) {this.name = name;}
     public void setDescription(String description) {this.description = description;}
     public void setOwner(User owner) {this.owner = owner;}
+    public Long getId() {return this.id;}
     public String getName() {return this.name;}
     public String getDescription() {return this.description;}
     public User getOwner() {return this.owner;}
+    public Instant getCreatedAt() {return this.createdAt;}
+    public Instant getUpdatedAt() {return this.updatedAt;}
 
     @PrePersist
     void onCreate() {
