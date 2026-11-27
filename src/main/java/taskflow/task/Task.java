@@ -42,7 +42,7 @@ public class Task {
     public Long getId() {return this.id;}
     public String getTitle() {return this.title;}
     public String getDescription() {return this.description;}
-    public Enum<TaskStatus> getStatus() {return this.status;}
+    public TaskStatus getStatus() {return this.status;}
     public Project getProject() {return this.project;}
     public User getUser() {return this.assignee;}
     public Instant getCreatedAt() {return this.createdAt;}
