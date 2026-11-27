@@ -9,6 +9,8 @@ import taskflow.project.ProjectRepository;
 import taskflow.user.User;
 import taskflow.user.UserRepository;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
@@ -28,6 +30,10 @@ public class TaskRepositoryTest {
         Long projectId = project.getId();
         taskRepository.save(new Task("Test Task", "Description", TaskStatus.TODO, project, user));
 
-        assertThat(taskRepository.findAllByProjectId(projectId).stream().anyMatch(taskName -> taskName.getTitle().equals("Test Task"))).isTrue();
+        List<Task> tasks = taskRepository.findAllByProjectId(projectId);
+        assertThat(tasks)
+                .hasSize(1)
+                .extracting(Task::getTitle)
+                .containsExactly("Test Task");
     }
 }
