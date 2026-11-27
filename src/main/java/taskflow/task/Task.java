@@ -44,7 +44,7 @@ public class Task {
     public String getDescription() {return this.description;}
     public TaskStatus getStatus() {return this.status;}
     public Project getProject() {return this.project;}
-    public User getUser() {return this.assignee;}
+    public User getAssignee() {return this.assignee;}
     public Instant getCreatedAt() {return this.createdAt;}
     public Instant getUpdatedAt() {return this.updatedAt;}
 
